@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html lang="utf-8">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+	<link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+	<link rel="stylesheet" href="css/font-awesome.min.css">
+	<link rel="stylesheet" href="css/main.css">
+	<style>
+	.tree li {
+        list-style-type: none;
+		cursor:pointer;
+	}
+	table tbody tr:nth-child(odd){background:#F4F4F4;}
+	table tbody td:nth-child(even){color:#C00;}
+	</style>
+  </head>
+
+  <body>
+
+    <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container-fluid">
+        <div class="navbar-header">
+          <div><a class="navbar-brand" style="font-size:32px;" href="#">众筹平台 - 用户维护</a></div>
+        </div>
+        <div id="navbar" class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+            <li style="padding-top:8px;">
+				<div class="btn-group">
+				  <button type="button" class="btn btn-default btn-success dropdown-toggle" data-toggle="dropdown">
+					<i class="glyphicon glyphicon-user"></i> 张三 <span class="caret"></span>
+				  </button>
+					  <ul class="dropdown-menu" role="menu">
+						<li><a href="#"><i class="glyphicon glyphicon-cog"></i> 个人设置</a></li>
+						<li><a href="#"><i class="glyphicon glyphicon-comment"></i> 消息</a></li>
+						<li class="divider"></li>
+						<li><a href="index.html"><i class="glyphicon glyphicon-off"></i> 退出系统</a></li>
+					  </ul>
+			    </div>
+			</li>
+            <li style="margin-left:10px;padding-top:8px;">
+				<button type="button" class="btn btn-default btn-danger">
+				  <span class="glyphicon glyphicon-question-sign"></span> 帮助
+				</button>
+			</li>
+          </ul>
+          <form class="navbar-form navbar-right">
+            <input type="text" class="form-control" placeholder="Search...">
+          </form>
+        </div>
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-3 col-md-2 sidebar">
+			<div class="tree">
+				<ul style="padding-left:0px;" class="list-group" id="menuAll">
+					<li class="list-group-item tree-closed" >
+						<a href="main.html"><i class="glyphicon glyphicon-dashboard"></i> 控制面板</a> 
+					</li>
+					<li class="list-group-item tree-closed" >
+						<a href="param.html"><i class="glyphicon glyphicon-list-alt"></i> 参数管理</a> 
+					</li>
+				</ul>
+			</div>
+        </div>
+        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+			<div class="panel panel-default">
+			  <div class="panel-heading">
+				<h3 class="panel-title"><i class="glyphicon glyphicon-th"></i> 数据列表</h3>
+			  </div>
+			  <div class="panel-body">
+<form class="form-inline" role="form" style="float:left;">
+  <div class="form-group has-feedback">
+    <div class="input-group">
+      <div class="input-group-addon">查询用户名</div>
+      <input class="form-control has-success" type="text"  placeholder="请输入查询用户名" id="usernametext">
+    </div>
+	  <div class="input-group">
+		  <div class="input-group-addon">查询昵称</div>
+		  <input class="form-control has-success" type="text"  placeholder="请输入查询昵称" id="nametext">
+	  </div>
+	  <div class="input-group">
+		  <div class="input-group-addon">查询邮箱</div>
+		  <input class="form-control has-success" type="text"  placeholder="请输入查询邮箱" id="emailtext">
+	  </div>
+  </div>
+  <button type="button" class="btn btn-warning" onclick="getUserInfo(1)"><i class="glyphicon glyphicon-search"></i> 查询</button>
+</form>
+<button type="button" class="btn btn-danger" style="float:right;margin-left:10px;" onclick="deleteAll()"><i class=" glyphicon glyphicon-remove"></i> 删除</button>
+<button type="button" class="btn btn-primary" style="float:right;" onclick="window.location.href='add.html'"><i class="glyphicon glyphicon-plus"></i> 新增</button>
+<br>
+ <hr style="clear:both;">
+          <div class="table-responsive">
+            <table class="table  table-bordered" id="dataTable">
+              <thead>
+                <tr >
+                  <th width="30">#</th>
+				  <th width="30"><input type="checkbox" id="checkboxAll" onclick="checkboxAll()"></th>
+                  <th>账号</th>
+                  <th>名称</th>
+                  <th>邮箱地址</th>
+                  <th width="100">操作</th>
+                </tr>
+              </thead>
+              <tbody>
+
+              </tbody>
+			  <tfoot>
+			     <tr >
+				     <td colspan="6" align="center">
+						<ul class="pagination" id="pagination">
+								<li class="disabled"><a href="#">上一页</a></li>
+								<li class="active" value="1"><a href="#">1 <span  class="sr-only">(current)</span></a></li>
+								<li value="2"><a href="#">2</a></li>
+								<li value="3"><a href="#">3</a></li>
+								<li><a href="#">4</a></li>
+								<li><a href="#">5</a></li>
+								<li><a href="#">下一页</a></li>
+						</ul>
+					 </td>
+				 </tr>
+
+			  </tfoot>
+            </table>
+          </div>
+			  </div>
+			</div>
+        </div>
+      </div>
+    </div>
+
+    <script src="jquery/jquery-2.1.1.min.js"></script>
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+	<script src="script/docs.min.js"></script>
+        <script type="text/javascript">
+
+			//获取地址栏参数
+            var search = window.location.search;
+            var splitElement = search.split("=")[1];
+            var page = splitElement.split("&")[0];
+            var userId = search.split("=")[2];
+			console.log(page+":"+parseInt(userId))
+            function f(){
+                var obj = search.split("=")[2];
+                console.log(page)
+                var parse = decodeURI(obj)
+                var parse1 = JSON.parse(parse);//对象json
+			}
+            // var json = encodeURI(JSON.stringify(parse1));
+            $(function () {
+			    $(".list-group-item").click(function(){
+				    if ( $(this).find("ul") ) {
+						$(this).toggleClass("tree-closed");
+						if ( $(this).hasClass("tree-closed") ) {
+							$("ul", this).hide("fast");
+						} else {
+							$("ul", this).show("fast");
+						}
+					}
+				});
+            });
+            // $("tbody .btn-success").click(function(){
+            //     window.location.href = "assignRole.html";
+            // });
+
+            function success(id) {
+                window.location.href = "assignRole.html?id="+id;
+            }
+
+            // function primary(userId,username,name,email){
+            //     window.location.href = "edit.html?userId="+userId+",username="+username+",name="+name+",email="+email;
+            // };
+            function primary(userId){
+                window.location.href = "edit.html?userId="+userId;
+            };
+
+            function deleteUser(userId){
+                $.ajax({
+                    type:"POST",
+                    url:"deleteUser",
+                    contentType:"application/json",
+                    data:JSON.stringify({userid:userId}),
+                    dataType:"json",
+
+                    success:function(data){
+                        if (data==true) {
+                        	alert("删除成功！！")
+							window.location.reload();
+                        }else {
+                            alert("删除失败！！")
+						}
+                    }
+                })
+			}
+
+			var length=0;
+            var leng=0;
+			function checkboxAll() {
+                length=0;
+				var flag = $("#checkboxAll").prop("checked");
+				$(".checkbox").each(function () {
+                    length++;
+					$(this).prop("checked",flag);
+
+                    $(this).click(function () {
+                        var flag = $(this).prop("checked");
+                        if (flag) {
+                            length++;
+                            if (length==10){
+                                $("#checkboxAll").prop("checked",true);
+                            }
+                        }else {
+                            length--;
+                            $("#checkboxAll").prop("checked",false);
+                        }
+
+                    })
+                })
+            }
+
+            function deleteAll(){
+                var array = new Array();
+                $(".checkbox").each(function () {
+
+                    var prop = $(this).prop("checked");
+                    if (prop==true){
+                        array.push($(this).val())
+                    }
+                })
+				console.log(array);
+				$.ajax({
+                    async : false,
+                    cache : false,
+                    traditional: true,
+                    type:"POST",
+                    url:"deleteUserAll",
+                    //contentType:"application/json",
+                    data: {
+                    	ids:array
+                	},
+                    //dataType:"json",
+                    success:function(data){
+                        debugger;
+                       if (data=="true") {
+                           window.location.reload();
+					   } else {
+                           alert("删除失败！！！");
+					   }
+                    }
+				})
+			}
+
+
+			function getUserInfo(currentPage) {
+			    $("#dataTable thead tr:not(:first)").empty("")
+				$.ajax({
+                    type:"POST",
+                    url:"getPageUserInfo",
+                    contentType:"application/json",
+                    data:JSON.stringify({
+                        username:$("#usernametext").val(),
+                        name:$("#nametext").val(),
+                        email:$("#emailtext").val(),
+                        pagin:({
+                            currentPage:currentPage
+						})
+
+                    }),
+                    dataType:"json",
+
+                    success:function(data){
+                        $(data.list).each(function (index,item) {
+                            $(" <tr>\n" +
+                                "                  <td>"+item.userid+"</td>\n" +
+                                "\t\t\t\t  <td><input type=\"checkbox\" class='checkbox' value='"+item.userid+"'></td>\n" +
+                                "                  <td>"+item.username+"</td>\n" +
+                                "                  <td>"+item.name+"</td>\n" +
+                                "                  <td>"+item.email+"</td>\n" +
+                                "                  <td>\n" +
+                                "\t\t\t\t      <button type=\"button\"  class=\"btn btn-success btn-xs\" onclick='success("+item.userid+")'><i class=\" glyphicon glyphicon-check\"></i></button>\n" +
+                                "\t\t\t\t      <button type=\"button\" onclick='primary("+item.userid+",&#39;"+item.username+"&#39;,&#39;"+item.name+"&#39;,&#39;"+item.email+"&#39;"+")' class=\"btn btn-primary btn-xs\"><i class=\" glyphicon glyphicon-pencil\"></i></input>\n" +
+                                "\t\t\t\t\t  <button type=\"button\" onclick='deleteUser("+item.userid+")' class=\"btn btn-danger btn-xs\"><i class=\" glyphicon glyphicon-remove\"></i></button>\n" +
+                                "\t\t\t\t  </td>").insertAfter('#dataTable tr:eq('+(index)+')');
+                        })
+
+						var pagin = $(data.pagin);
+						var countPage = $(data.pagin.countPage);
+                        var currentPage = $(data.pagin.currentPage);
+                        console.log(parseInt(data.pagin.currentPage)+":"+parseInt(currentPage));
+                        var str="";
+
+                        if (data.pagin.currentPage==1) {
+							str+="<li class=\"disabled\"><a href='javascript:void(0);'>上一页</a></li>"
+						}else {
+                            str+="<li ><a href=\"#\" onclick=\"getUserInfo("+(data.pagin.currentPage-1)+")\">上一页</a></li>"
+						}
+
+                        for (var i=1;i<=data.pagin.countPage;i++) {
+							if (data.pagin.currentPage==i) {
+                            	str+="<li class=\"active\" value=\""+i+"\"><a href=\"#\" onclick=\"getUserInfo("+i+")\">"+i+" <span  class=\"sr-only\">(current)</span></a></li>"
+							} else {
+                            	str+="<li value=\""+i+"\"><a href=\"#\" onclick=\"getUserInfo("+i+")\">"+i+"</a></li>"
+							}
+						}
+
+                        if (data.pagin.currentPage==data.pagin.countPage) {
+                            str+="<li class=\"disabled\"><a href=\"#\">下一页</a></li>"
+                        }else {
+                            str+="<li onclick=\"getUserInfo("+(data.pagin.currentPage+1)+")\"><a href='javascript:void(0);'>下一页</a></li>"
+                        }
+                        $("#pagination").html(str)
+                    }
+				})
+            }
+            getUserInfo(page);
+
+            function output(data, str) {
+                $("<li style=\"height:30px;\">\n" +
+                    "\t\t\t\t\t\t\t\t<a href=\"" + data.url+"&id="+userId +"\"><i class=\"glyphicon glyphicon-user\"></i> " + data.name + "</a> \n" +
+                    "\t\t\t\t\t\t\t</li>").insertAfter("#" + str + " ul li:last()")
+            }
+
+
+            $.ajax({
+                type: "POST",
+                url: "getMenuInfoByUserId?id=" + parseInt(userId),
+                async: false,
+                success: function (data) {
+                    console.log(data)
+                    var i=0;
+                    $(data).each(function (index, item) {
+                        if (item.name === "权限管理"&& item.checked==true) {
+                            $("<li class=\"list-group-item tree-closed\" id='firstMenu'>\n" +
+                                "\t\t\t\t\t\t<span><i class=\"glyphicon glyphicon glyphicon-tasks\"></i> "+item.name+" <span class=\"badge\" style=\"float:right\">"+item.length+"</span></span> \n" +
+                                "\t\t\t\t\t<ul style=\"margin-top:10px;display:none;\"><li></li></ul></li>").insertAfter("#menuAll>li:eq(" + i++ + ")")
+                            $(item.children).each(function (index, item) {
+                                if (item.checked==true) {
+                                    output(item, "firstMenu", item.url)
+                                }
+                            })
+                        }else if (item.name==="业务审核"&&item.checked==true){
+                            $("<li class=\"list-group-item tree-closed\" id='middenMenu'>\n" +
+                                "\t\t\t\t\t\t<span><i class=\"glyphicon glyphicon-ok\"></i> "+item.name+" <span class=\"badge\" style=\"float:right\">"+item.length+"</span></span> \n" +
+                                "\t\t\t\t\t<ul style=\"margin-top:10px;display:none;\"><li></li></ul></li>").insertAfter("#menuAll>li:eq(" + i++ + ")")
+                            $(item.children).each(function (index, item) {
+                                if (item.checked==true) {
+
+                                    output(item, "middenMenu", item.url)
+                                }
+                            })
+                        } else if(item.name==="业务管理"&&item.checked==true) {
+                            $("<li class=\"list-group-item tree-closed\" id='lastMenu'>\n" +
+                                "\t\t\t\t\t\t<span><i class=\"glyphicon glyphicon-th-large\"></i> "+item.name+" <span class=\"badge\" style=\"float:right\">"+item.length+"</span></span> \n" +
+                                "\t\t\t\t\t<ul style=\"margin-top:10px;display:none;\"><li></li></ul></li>").insertAfter("#menuAll>li:eq(" + i++ + ")")
+                            $(item.children).each(function (index, item) {
+                                if (item.checked==true) {
+
+                                    output(item, "lastMenu", item.url)
+                                }
+                            })
+                        }
+
+                    })
+                },
+                error: function (data) {
+                    console.log("内部服务器错误:" + data)
+                }
+            })
+
+        </script>
+  </body>
+</html>

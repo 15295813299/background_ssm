@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fl.mapper.RoleInfoMapper">
+    <select id="getRoleInfoById" parameterType="java.lang.Integer" resultType="com.fl.dto.RoleInfoDto">
+        select r.role,u.userid,r.roleid from userinfo u
+        RIGHT JOIN user_role ur on u.userid=ur.userid
+        RIGHT JOIN userrole r on u.status=1 and ur.status=1 and u.userid=#{id} and ur.roleid=r.roleid
+    </select>
+
+    <update id="updateRoleStatusByIds" parameterType="com.fl.vo.RoleInfoVo">
+        update user_role set status=0 where userid=#{userid} and status=1
+    </update>
+
+    <insert id="addUserRole" parameterType="com.fl.vo.RoleInfoVo">
+        insert into user_role(userid,roleid) values
+        <foreach collection="yesId" item="item" separator=",">
+            (#{userid},#{item})
+        </foreach>
+    </insert>
+
+    <delete id="deleteRoleStatus">
+        delete from user_role where status=0
+    </delete>
+
+    <select id="getRoleAll" resultType="com.fl.dto.RoleInfoDto">
+        select * from userrole
+    </select>
+</mapper>

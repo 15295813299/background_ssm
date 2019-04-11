@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fl.mapper.MenuInfoMapper">
+	<resultMap id="MenuInfoByIdMap" type="com.fl.dto.MenuInfoDto">
+		<id column="fid" property="id"></id>
+		<result column="fname" property="name"></result>
+		<result column="status" property="checked"></result>
+		<collection property="children" ofType="com.fl.dto.MenuInfoDto">
+			<id column="menuid" property="id"></id>
+			<result column="parentid" property="pid"></result>
+			<result column="menuname" property="name"></result>
+			<result column="menupath" property="url"></result>
+			<result column="menuicon" property="icon"></result>
+			<result column="status" property="checked"></result>
+		</collection>
+	</resultMap>
+    <select id="getMenuInfoByUserId" parameterType="java.lang.Integer" resultMap="MenuInfoByIdMap">
+	SELECT
+	tb2.*,m3.menuid fid,m3.menuname fname
+FROM
+	(
+		SELECT
+			m2.*, tb1. STATUS
+		FROM
+			(
+				SELECT
+					rm.*, m.menuid menuid1,
+					m.menuname menuname1,
+					m.parentid parentid1
+				FROM
+					userinfo u
+				RIGHT JOIN user_role ur ON u.userid = ur.userid
+				AND ur.`status` = 1
+				RIGHT JOIN userrole r ON ur.roleid = r.roleid
+				RIGHT JOIN role_menu rm ON r.roleid = rm.roleid
+				RIGHT JOIN menuinfo m ON m.menuid = rm.menuid
+				WHERE
+					ur.userid = #{id}
+			) tb1
+		RIGHT JOIN menuinfo m2 ON m2.menuid = tb1.menuid1
+		WHERE
+			m2.parentid NOT IN (0)
+	) tb2 RIGHT JOIN menuinfo m3 ON tb2.parentid=m3.menuid WHERE m3.parentid=0  ORDER BY STATUS DESC
+    </select>
+
+
+	<delete id="deleteMenuInfoById" parameterType="com.fl.vo.MenuInfoVo">
+		delete from role_menu where roleid=#{id}
+	</delete>
+
+	<insert id="addMenuInfo" parameterType="com.fl.vo.MenuInfoVo">
+		insert  into role_menu(roleid,menuid,status) values
+		<foreach collection="menuIds" separator="," item="item">
+			(#{id},#{item},1)
+		</foreach>
+	</insert>
+
+
+	<select id="getMenuInfoAll" parameterType="java.lang.Integer" resultMap="MenuInfoByIdMap">
+	SELECT
+	tb2.*,m3.menuid fid,m3.menuname fname
+	FROM
+	(
+		SELECT
+			m2.*, tb1. STATUS
+		FROM
+			(
+				SELECT
+					rm.*, m.menuid menuid1,
+					m.menuname menuname1,
+					m.parentid parentid1
+				FROM
+					userinfo u
+				RIGHT JOIN user_role ur ON u.userid = ur.userid
+				AND ur.`status` = 1
+				RIGHT JOIN userrole r ON ur.roleid = r.roleid
+				RIGHT JOIN role_menu rm ON r.roleid = rm.roleid
+				RIGHT JOIN menuinfo m ON m.menuid = rm.menuid
+				WHERE
+					ur.roleid = #{id}
+			) tb1
+		RIGHT JOIN menuinfo m2 ON m2.menuid = tb1.menuid1
+		WHERE
+			m2.parentid NOT IN (0)
+	) tb2 RIGHT JOIN menuinfo m3 ON tb2.parentid=m3.menuid WHERE m3.parentid=0
+    </select>
+</mapper>
+
+
+
+
+

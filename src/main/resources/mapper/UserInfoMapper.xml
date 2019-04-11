@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.fl.mapper.UserInfoMapper">
+
+    <select id="getUserBy" resultType="com.fl.pojo.UserInfo" parameterType="com.fl.pojo.UserInfo">
+        select * from userinfo where status=1
+            <if test="username!=null and username!=''">
+                AND username=#{username}
+            </if>
+            <if test="password!=null and password!=''">
+                AND password=#{password}
+            </if>
+            <if test="email!=null and email!=''">
+                AND email=#{email}
+            </if>
+            <if test="name!=null and name!=''">
+                AND name=#{name}
+            </if>
+            <if test="status!=null and status!=0">
+                AND userid=#{userid}
+            </if>
+    </select>
+
+    <insert id="insertUser" parameterType="com.fl.pojo.UserInfo">
+        insert into userinfo values(default
+            <if test="username!=null and username!=''">
+                ,#{username}
+            </if>
+            <if test="password!=null and password!=''">
+                ,#{password}
+            </if>
+            <if test="email!=null and email!=''">
+                ,#{email}
+            </if>
+            <if test="name!=null and name!=''">
+                ,#{name}
+            </if>
+        ,#{status})
+    </insert>
+
+    <update id="updateUserInfoById" parameterType="com.fl.pojo.UserInfo">
+        update userinfo
+        <set>
+            <trim prefixOverrides=",">
+                <if test="username!=null and username!=''">
+                    ,username=#{username}
+                </if>
+                <if test="password!=null and password!=''">
+                    ,password=#{password}
+                </if>
+                <if test="email!=null and email!=''">
+                    ,email=#{email}
+                </if>
+                <if test="name!=null and name!=''">
+                    ,name=#{name}
+                </if>
+                <if test="status!=null and status!=0">
+                    ,status=#{status}
+                </if>
+            </trim>
+        </set>
+       where userid=#{userid}
+    </update>
+
+    <select id="loginCheck" resultType="com.fl.pojo.UserInfo">
+        select * from userinfo where username=#{username} and status=1
+    </select>
+
+    <select id="getUserByUsername" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select count(1) from userinfo where username=#{username} and status=1
+    </select>
+
+    <update id="deleteUser" parameterType="java.lang.Integer" >
+        update userinfo set status=0 where userid=#{userid}
+    </update>
+
+    <update id="deleteUserAll" parameterType="java.util.ArrayList">
+        update userinfo set status=0 where userid in
+        <foreach collection="list" item="ite" open="(" close=")" separator=",">
+            #{ite}
+        </foreach>
+    </update>
+
+    <select id="getPageUserInfo" parameterType="com.fl.vo.UserInfoVo" resultType="com.fl.pojo.UserInfo">
+        select * from userinfo where status=1
+        <if test="username!=null and username!=''">
+            AND username=#{username}
+        </if>
+        <if test="email!=null and email!=''">
+            AND email=#{email}
+        </if>
+        <if test="name!=null and name!=''">
+            AND name=#{name}
+        </if>
+        limit #{pagin.offset},#{pagin.pageSize}
+
+    </select>
+
+    <select id="getUserInfoCount" parameterType="com.fl.vo.UserInfoVo" resultType="java.lang.Integer">
+        select count(1) from userinfo where status=1
+        <if test="username!=null and username!=''">
+            AND username=#{username}
+        </if>
+        <if test="email!=null and email!=''">
+            AND email=#{email}
+        </if>
+        <if test="name!=null and name!=''">
+            AND name=#{name}
+        </if>
+    </select>
+</mapper>
